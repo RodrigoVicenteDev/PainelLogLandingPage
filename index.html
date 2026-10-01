@@ -1,0 +1,366 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PainelLog — Um sistema de entregas. Entregue para você!</title>
+<meta name="description" content="PainelLog é o sistema de gestão para transportadoras: CTRCs, central de ocorrências em tempo real, emissões automatizadas, WhatsApp integrado, BI e controle de pátio e frota. Conecta no sistema que sua transportadora já usa.">
+<meta property="og:title" content="PainelLog — sistema de entregas para transportadoras">
+<meta property="og:description" content="Automação, controle e gestão da sua operação logística em um só painel. Conecta no sistema que você já usa.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pt_BR">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,400;0,500;0,600;0,700;0,800;1,800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --pl-navy:#0B2378; --pl-orange:#FF6320; --pl-blue:#1580DB; --pl-purple:#8A6FA0;
+  --pl-gradient:linear-gradient(90deg,#FF6320 0%,#8A6FA0 50%,#1580DB 100%);
+  --pl-bg:#F4F6FA; --pl-surface:#FFFFFF; --pl-surface-alt:#F7F9FD;
+  --pl-border:#D9DFEB; --pl-divider:#E3E8F2;
+  --pl-text:#1B2440; --pl-text-2:#34405E; --pl-text-3:#5B6680; --pl-text-4:#7A86A3;
+  --pl-success-bg:#E6F6EE; --pl-success-fg:#15803D;
+  --pl-warning-bg:#FFF4D6; --pl-warning-fg:#A16207;
+  --pl-alert-bg:#FFF1EA; --pl-alert-fg:#C2410C;
+  --pl-info-bg:#E7F1FC; --pl-info-fg:#1267B8;
+  --pl-font:'Exo 2',system-ui,sans-serif;
+  --pl-radius-sm:10px; --pl-radius-md:16px; --pl-radius-lg:22px; --pl-radius-pill:999px;
+  --pl-shadow-card:0 2px 10px rgba(11,35,120,.06);
+  --pl-shadow-lift:0 18px 50px rgba(11,35,120,.12);
+  --pl-maxw:1140px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--pl-bg);color:var(--pl-text);font-family:var(--pl-font);line-height:1.55;-webkit-font-smoothing:antialiased}
+a{color:var(--pl-blue);text-decoration:none}
+a:hover{color:var(--pl-navy)}
+img{max-width:100%;display:block}
+.wrap{max-width:var(--pl-maxw);margin:0 auto;padding:0 24px}
+.pl-title{font-weight:800;font-style:italic;color:var(--pl-navy)}
+.pl-title .dot{color:var(--pl-orange)}
+.grad-line{height:3px;background:var(--pl-gradient);border-radius:2px}
+
+/* Botões */
+.btn{display:inline-flex;align-items:center;gap:9px;font:700 17px var(--pl-font);border-radius:var(--pl-radius-sm);padding:13px 26px;border:0;cursor:pointer;transition:.18s transform,.18s box-shadow,.18s background}
+.btn--primary{background:var(--pl-orange);color:#fff;box-shadow:0 8px 20px rgba(255,99,32,.25)}
+.btn--primary:hover{color:#fff;transform:translateY(-2px);box-shadow:0 12px 26px rgba(255,99,32,.34)}
+.btn--secondary{background:var(--pl-navy);color:#fff}
+.btn--secondary:hover{color:#fff;transform:translateY(-2px)}
+.btn--outline{background:#fff;color:var(--pl-navy);border:1.5px solid var(--pl-navy);padding:11.5px 22px}
+.btn--outline:hover{background:var(--pl-navy);color:#fff}
+.btn--ghost{background:transparent;color:var(--pl-navy);padding:10px 14px}
+
+/* Header */
+header{position:sticky;top:0;z-index:50;background:var(--pl-surface);box-shadow:0 1px 0 var(--pl-divider)}
+header .bar{display:flex;align-items:center;justify-content:space-between;height:76px}
+.brand{display:flex;align-items:center;gap:10px}
+.brand img{height:40px;width:auto}
+nav.main{display:flex;gap:28px;align-items:center}
+nav.main a{color:var(--pl-text-2);font-weight:600;font-size:15px}
+nav.main a:hover{color:var(--pl-navy)}
+header .grad-line{height:3px}
+.menu-btn{display:none;background:none;border:0;cursor:pointer;padding:8px}
+.menu-btn span{display:block;width:24px;height:2.5px;background:var(--pl-navy);margin:5px 0;border-radius:2px}
+
+/* Hero */
+.hero{padding:76px 0 64px}
+.hero .grid{display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;background:var(--pl-info-bg);color:var(--pl-info-fg);font-weight:700;font-size:13px;letter-spacing:.3px;text-transform:uppercase;padding:7px 14px;border-radius:var(--pl-radius-pill)}
+.hero h1{font-size:clamp(34px,5vw,56px);line-height:1.05;margin:20px 0 0;font-weight:800;color:var(--pl-text)}
+.hero h1 .pl-title{display:inline}
+.hero p.lead{font-size:19px;color:var(--pl-text-3);margin:20px 0 32px;max-width:540px}
+.hero .cta-row{display:flex;gap:14px;flex-wrap:wrap}
+.hero .trust{margin-top:26px;color:var(--pl-text-4);font-size:14px;display:flex;gap:18px;flex-wrap:wrap}
+.hero .trust b{color:var(--pl-text-2)}
+
+/* Mockup do painel */
+.mock{background:var(--pl-surface);border-radius:var(--pl-radius-lg);box-shadow:var(--pl-shadow-lift);overflow:hidden;border:1px solid var(--pl-divider)}
+.mock .top{height:3px;background:var(--pl-gradient)}
+.mock .mhead{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--pl-divider)}
+.mock .mtitle{font-weight:800;font-style:italic;color:var(--pl-navy);font-size:17px}
+.mock .mtitle .dot{color:var(--pl-orange)}
+.dots{display:flex;gap:6px}
+.dots i{width:10px;height:10px;border-radius:50%;display:block}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:18px 20px}
+.kpi{background:var(--pl-surface-alt);border-radius:12px;padding:14px;position:relative;overflow:hidden}
+.kpi::before{content:"";position:absolute;top:0;left:0;right:0;height:4px}
+.kpi.k1::before{background:var(--pl-success-fg)}
+.kpi.k2::before{background:var(--pl-warning-fg)}
+.kpi.k3::before{background:var(--pl-blue)}
+.kpi .lbl{font-size:12px;color:var(--pl-text-4);font-weight:600}
+.kpi .val{font-size:30px;font-weight:800;line-height:1.1;color:var(--pl-text);margin-top:4px}
+.rows{padding:4px 20px 20px}
+.row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-top:1px solid var(--pl-divider)}
+.row .who{font-weight:600;color:var(--pl-text-2);font-size:14px}
+.pill{display:inline-block;padding:4px 12px;border-radius:var(--pl-radius-pill);font-size:12.5px;font-weight:600}
+.pill--success{background:var(--pl-success-bg);color:var(--pl-success-fg)}
+.pill--warning{background:var(--pl-warning-bg);color:var(--pl-warning-fg)}
+.pill--alert{background:var(--pl-alert-bg);color:var(--pl-alert-fg)}
+.pill--info{background:var(--pl-info-bg);color:var(--pl-info-fg)}
+
+/* Faixa de logos / credibilidade */
+.band{background:var(--pl-surface);border-top:1px solid var(--pl-divider);border-bottom:1px solid var(--pl-divider)}
+.band .wrap{display:flex;align-items:center;justify-content:center;gap:40px;flex-wrap:wrap;padding:22px 24px;color:var(--pl-text-4);font-weight:600;font-size:15px}
+.band .wrap b{color:var(--pl-navy)}
+
+/* Seções */
+section.block{padding:80px 0}
+.sec-head{max-width:720px;margin:0 auto 52px;text-align:center}
+.sec-head .eyebrow{margin-bottom:14px}
+.sec-head h2{font-size:clamp(28px,3.6vw,40px);margin:0 0 12px;font-weight:800;color:var(--pl-text)}
+.sec-head p{color:var(--pl-text-3);font-size:18px;margin:0}
+
+/* Funcionalidades 01-06 */
+.features{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.feat{background:var(--pl-surface);border-radius:var(--pl-radius-md);box-shadow:var(--pl-shadow-card);padding:26px;border:1px solid var(--pl-divider);transition:.2s transform,.2s box-shadow}
+.feat:hover{transform:translateY(-4px);box-shadow:var(--pl-shadow-lift)}
+.feat .num{font-weight:700;font-size:15px;color:var(--pl-text-4);letter-spacing:1px}
+.feat .num-line{width:40px;margin:8px 0 16px}
+.feat h3{margin:0 0 8px;font-size:21px;font-weight:800;font-style:italic;color:var(--pl-navy)}
+.feat h3 .dot{color:var(--pl-orange)}
+.feat p{margin:0;color:var(--pl-text-3);font-size:15.5px}
+
+/* Integração */
+.integra{background:var(--pl-navy);color:#fff;border-radius:var(--pl-radius-lg);padding:54px;position:relative;overflow:hidden}
+.integra::after{content:"";position:absolute;inset:0 0 auto 0;height:4px;background:var(--pl-gradient)}
+.integra .grid{display:grid;grid-template-columns:1fr 1fr;gap:44px;align-items:center}
+.integra h2{color:#fff;font-size:clamp(26px,3.4vw,38px);margin:0 0 14px;font-weight:800}
+.integra h2 .pl-title{color:#fff}
+.integra h2 .dot{color:var(--pl-orange)}
+.integra p{color:#C9D2EC;font-size:17px;margin:0 0 14px}
+.chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+.chip{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);color:#fff;padding:9px 15px;border-radius:var(--pl-radius-pill);font-size:14px;font-weight:600}
+.flow{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:var(--pl-radius-md);padding:26px}
+.flow .step{display:flex;gap:14px;align-items:flex-start;padding:12px 0}
+.flow .step:not(:last-child){border-bottom:1px solid rgba(255,255,255,.12)}
+.flow .dotn{flex:0 0 32px;height:32px;border-radius:50%;background:var(--pl-orange);color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:15px}
+.flow .step b{color:#fff;display:block;font-size:16px}
+.flow .step span{color:#AEB9DC;font-size:14px}
+
+/* Benefícios */
+.benefits{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.benefit{text-align:center;padding:10px}
+.benefit .big{font-size:40px;font-weight:800;color:var(--pl-navy);line-height:1}
+.benefit .big .dot{color:var(--pl-orange)}
+.benefit p{color:var(--pl-text-3);font-size:15px;margin:10px 0 0}
+
+/* CTA final */
+.cta{background:var(--pl-surface);border-radius:var(--pl-radius-lg);box-shadow:var(--pl-shadow-lift);border:1px solid var(--pl-divider);padding:52px;text-align:center}
+.cta h2{font-size:clamp(26px,3.4vw,38px);margin:0 0 10px;font-weight:800;color:var(--pl-text)}
+.cta p{color:var(--pl-text-3);font-size:18px;margin:0 auto 28px;max-width:560px}
+.cta .cta-row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.signature{margin-top:36px;font-weight:800;font-style:italic;color:var(--pl-navy);font-size:20px}
+.signature .dot{color:var(--pl-orange)}
+
+/* Footer */
+footer{background:var(--pl-surface);border-top:1px solid var(--pl-divider);margin-top:20px}
+footer .wrap{display:flex;align-items:center;justify-content:space-between;padding:28px 24px;flex-wrap:wrap;gap:16px}
+footer .brand img{height:34px}
+footer small{color:var(--pl-text-4)}
+.todo{background:var(--pl-warning-bg);color:var(--pl-warning-fg);border-radius:8px;padding:2px 7px;font-size:11px;font-weight:700;vertical-align:middle}
+
+@media(max-width:900px){
+  nav.main{display:none}
+  .menu-btn{display:block}
+  .hero .grid{grid-template-columns:1fr;gap:38px}
+  .features{grid-template-columns:1fr 1fr}
+  .integra .grid{grid-template-columns:1fr;gap:28px}
+  .integra{padding:36px}
+  .benefits{grid-template-columns:1fr 1fr}
+}
+@media(max-width:560px){
+  .features{grid-template-columns:1fr}
+  .kpis{grid-template-columns:1fr 1fr}
+  .cta,.mock .mhead{padding:28px}
+  .hero{padding:48px 0 40px}
+  section.block{padding:56px 0}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap bar">
+    <div class="brand">
+      <img src="assets/painellog-logo.webp" alt="PainelLog">
+    </div>
+    <nav class="main">
+      <a href="#funcionalidades">Funcionalidades</a>
+      <a href="#integracao">Integração</a>
+      <a href="#resultados">Resultados</a>
+      <a href="#contato">Contato</a>
+      <a href="#contato" class="btn btn--primary" style="padding:10px 20px;font-size:15px">Solicitar demonstração</a>
+    </nav>
+    <button class="menu-btn" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+  <div class="grad-line"></div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="wrap grid">
+    <div>
+      <span class="eyebrow">● Sistema para transportadoras</span>
+      <h1>Toda a sua operação logística em <span class="pl-title">um só painel<span class="dot">.</span></span></h1>
+      <p class="lead">CTRCs, ocorrências em tempo real, emissões automatizadas, WhatsApp integrado e BI — o PainelLog conecta no sistema que a sua transportadora já usa e coloca a operação sob controle.</p>
+      <div class="cta-row">
+        <a href="#contato" class="btn btn--primary">Solicitar demonstração →</a>
+        <a href="#funcionalidades" class="btn btn--outline">Ver funcionalidades</a>
+      </div>
+      <div class="trust">
+        <span><b>Em produção</b> numa transportadora real</span>
+        <span><b>Integração</b> sob medida</span>
+        <span><b>Suporte</b> próximo</span>
+      </div>
+    </div>
+
+    <!-- Mockup do painel -->
+    <div class="mock" aria-hidden="true">
+      <div class="top"></div>
+      <div class="mhead">
+        <div class="mtitle">Central de Ocorrências<span class="dot">.</span></div>
+        <div class="dots"><i style="background:#E5484D"></i><i style="background:#F5B82E"></i><i style="background:#22A55B"></i></div>
+      </div>
+      <div class="kpis">
+        <div class="kpi k1"><div class="lbl">Entregues hoje</div><div class="val">128</div></div>
+        <div class="kpi k2"><div class="lbl">Pendentes</div><div class="val">14</div></div>
+        <div class="kpi k3"><div class="lbl">Em rota</div><div class="val">37</div></div>
+      </div>
+      <div class="rows">
+        <div class="row"><span class="who">CTRC 45.812 — Cliente A</span><span class="pill pill--success">Entregue</span></div>
+        <div class="row"><span class="who">CTRC 45.813 — Cliente B</span><span class="pill pill--info">Em rota</span></div>
+        <div class="row"><span class="who">CTRC 45.814 — Cliente C</span><span class="pill pill--warning">Pendente</span></div>
+        <div class="row"><span class="who">CTRC 45.815 — Cliente D</span><span class="pill pill--alert">Ocorrência</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BAND -->
+<div class="band">
+  <div class="wrap">
+    <span>Feito por quem vive a operação &nbsp;·&nbsp; <b>CTRCs</b> &nbsp;·&nbsp; <b>Ocorrências</b> &nbsp;·&nbsp; <b>Emissões</b> &nbsp;·&nbsp; <b>WhatsApp</b> &nbsp;·&nbsp; <b>BI</b> &nbsp;·&nbsp; <b>Pátio &amp; Frota</b></span>
+  </div>
+</div>
+
+<!-- FUNCIONALIDADES -->
+<section class="block" id="funcionalidades">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">O que o PainelLog faz</span>
+      <h2>Tudo que a sua transportadora precisa, no lugar certo</h2>
+      <p>Seis frentes que tiram a operação das planilhas e do improviso.</p>
+    </div>
+    <div class="features">
+      <div class="feat">
+        <div class="num">01</div><div class="grad-line num-line"></div>
+        <h3>Automação<span class="dot">.</span></h3>
+        <p>Robôs emitem documentos e complementares automaticamente, operando o sistema que você já usa — sem digitação manual, sem retrabalho.</p>
+      </div>
+      <div class="feat">
+        <div class="num">02</div><div class="grad-line num-line"></div>
+        <h3>Controle<span class="dot">.</span></h3>
+        <p>CTRCs importados por CSV, grid completo, histórico e timeline de cada entrega. Você enxerga a operação inteira em segundos.</p>
+      </div>
+      <div class="feat">
+        <div class="num">03</div><div class="grad-line num-line"></div>
+        <h3>Gestão<span class="dot">.</span></h3>
+        <p>Central de Ocorrências e Emissões em tempo real: custos, estadia e atendimento de parceiros atualizados ao vivo para toda a equipe.</p>
+      </div>
+      <div class="feat">
+        <div class="num">04</div><div class="grad-line num-line"></div>
+        <h3>Comunicação<span class="dot">.</span></h3>
+        <p>WhatsApp integrado: receba comprovantes, mídias e respostas direto no painel, com baixa automática das entregas.</p>
+      </div>
+      <div class="feat">
+        <div class="num">05</div><div class="grad-line num-line"></div>
+        <h3>Performance<span class="dot">.</span></h3>
+        <p>BI comercial, de logística e de ocorrências/custos. Indicadores, relatórios e exportações para decidir com dados — não com achismo.</p>
+      </div>
+      <div class="feat">
+        <div class="num">06</div><div class="grad-line num-line"></div>
+        <h3>Pátio &amp; Frota<span class="dot">.</span></h3>
+        <p>Designação de veículos, manutenção, docas e balanço de pallets. Do portão ao fechamento, o pátio sob controle.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INTEGRAÇÃO -->
+<section class="block" id="integracao" style="padding-top:20px">
+  <div class="wrap">
+    <div class="integra">
+      <div class="grid">
+        <div>
+          <h2>Conecta no sistema que você <span class="pl-title">já usa<span class="dot">.</span></span></h2>
+          <p>O PainelLog não obriga você a trocar de ERP. A camada de integração é construída sob medida para o sistema de gestão da sua transportadora — seja ele qual for.</p>
+          <p>Automação por robôs, importação de dados e webhooks se adaptam ao seu cenário. Novas integrações entram conforme a sua necessidade.</p>
+          <div class="chips">
+            <span class="chip">SSW</span>
+            <span class="chip">Outros ERPs de transporte</span>
+            <span class="chip">Importação CSV</span>
+            <span class="chip">WhatsApp (Twilio)</span>
+            <span class="chip">SEFAZ / Prefeitura</span>
+            <span class="chip">API sob medida</span>
+          </div>
+        </div>
+        <div class="flow">
+          <div class="step"><span class="dotn">1</span><div><b>Mapeamos a sua operação</b><span>Entendemos seu ERP, seus fluxos e o que trava hoje.</span></div></div>
+          <div class="step"><span class="dotn">2</span><div><b>Conectamos ao seu sistema</b><span>Integração e robôs adaptados ao ambiente que você já roda.</span></div></div>
+          <div class="step"><span class="dotn">3</span><div><b>Ativamos o painel</b><span>Sua equipe passa a operar tudo em um só lugar, em tempo real.</span></div></div>
+          <div class="step"><span class="dotn">4</span><div><b>Evoluímos com você</b><span>Novas telas e integrações conforme a operação cresce.</span></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RESULTADOS -->
+<section class="block" id="resultados" style="padding-top:20px">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Por que adotar</span>
+      <h2>Menos planilha, mais entrega</h2>
+      <p>O PainelLog nasceu dentro de uma transportadora real, resolvendo problemas reais.</p>
+    </div>
+    <div class="benefits">
+      <div class="benefit"><div class="big">-70%<span class="dot">.</span></div><p>de trabalho manual nas emissões complementares com os robôs</p></div>
+      <div class="benefit"><div class="big">Tempo&nbsp;real<span class="dot">.</span></div><p>ocorrências e entregas atualizadas ao vivo para toda a equipe</p></div>
+      <div class="benefit"><div class="big">1&nbsp;painel<span class="dot">.</span></div><p>CTRCs, custos, WhatsApp, BI e pátio reunidos num só lugar</p></div>
+      <div class="benefit"><div class="big">Sob&nbsp;medida<span class="dot">.</span></div><p>integra com o seu sistema e cresce junto com a operação</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTATO / CTA -->
+<section class="block" id="contato" style="padding-top:20px">
+  <div class="wrap">
+    <div class="cta">
+      <h2>Pronto para colocar a operação sob controle?</h2>
+      <p>Agende uma demonstração do PainelLog. Mostramos como ele se encaixa na sua transportadora e no sistema que você já usa.</p>
+      <div class="cta-row">
+        <!-- TODO: trocar NUMERO pelo WhatsApp real (formato 55DDDNUMERO) -->
+        <a href="https://wa.me/55SEUNUMERO?text=Quero%20uma%20demonstra%C3%A7%C3%A3o%20do%20PainelLog" class="btn btn--primary">Falar no WhatsApp <span class="todo">definir nº</span></a>
+        <!-- TODO: trocar pelo e-mail comercial real -->
+        <a href="mailto:contato@painellog.com.br?subject=Demonstra%C3%A7%C3%A3o%20PainelLog" class="btn btn--outline">Enviar e-mail <span class="todo">definir e-mail</span></a>
+      </div>
+      <div class="signature">PainelLog, um sistema de entregas. Entregue para você<span class="dot">!</span></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="brand"><img src="assets/painellog-logo.webp" alt="PainelLog"></div>
+    <small>© 2026 PainelLog · Um sistema de entregas. Entregue para você!</small>
+  </div>
+</footer>
+
+<script>
+// menu mobile simples: rola para funcionalidades (placeholder até termos um drawer)
+document.querySelector('.menu-btn')?.addEventListener('click',function(){
+  document.getElementById('funcionalidades')?.scrollIntoView({behavior:'smooth'});
+});
+</script>
+</body>
+</html>
