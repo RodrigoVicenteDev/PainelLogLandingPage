@@ -164,6 +164,25 @@ section.block{padding:80px 0}
 .signature{margin-top:36px;font-weight:800;font-style:italic;color:var(--pl-navy);font-size:20px}
 .signature .dot{color:var(--pl-orange)}
 
+/* Formulário de leads */
+.lead-form{max-width:560px;margin:4px auto 0;text-align:left}
+.lead-form .frow{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.lead-form .field{margin-top:14px}
+.lead-form label{display:block;font-size:13px;font-weight:700;color:var(--pl-text-4);margin-bottom:6px}
+.lead-form label .req{color:var(--pl-orange)}
+.lead-form input,.lead-form textarea,.lead-form select{width:100%;background:#fff;border:1px solid var(--pl-border);border-radius:var(--pl-radius-sm);padding:12px 15px;font:16px var(--pl-font);color:var(--pl-text);transition:.15s border-color,.15s box-shadow}
+.lead-form input:focus,.lead-form textarea:focus,.lead-form select:focus{outline:0;border-color:var(--pl-orange);box-shadow:0 0 0 3px rgba(255,99,32,.14)}
+.lead-form textarea{resize:vertical;min-height:84px}
+.lead-form .btn{width:100%;justify-content:center;margin-top:18px}
+.lead-form .hp{position:absolute;left:-9999px;opacity:0;height:0;overflow:hidden}
+.form-note{font-size:13px;color:var(--pl-text-4);margin-top:12px;text-align:center}
+.form-msg{display:none;margin-top:16px;padding:14px 16px;border-radius:var(--pl-radius-sm);font-weight:600;font-size:15px}
+.form-msg.ok{display:block;background:var(--pl-success-bg);color:var(--pl-success-fg)}
+.form-msg.err{display:block;background:var(--pl-danger-bg);color:var(--pl-danger-fg)}
+.or-sep{display:flex;align-items:center;gap:14px;color:var(--pl-text-4);font-size:13px;font-weight:600;margin:26px auto 0;max-width:560px}
+.or-sep::before,.or-sep::after{content:"";flex:1;height:1px;background:var(--pl-divider)}
+@media(max-width:560px){.lead-form .frow{grid-template-columns:1fr}}
+
 /* Footer */
 footer{background:var(--pl-surface);border-top:1px solid var(--pl-divider);margin-top:20px}
 footer .wrap{display:flex;align-items:center;justify-content:space-between;padding:28px 24px;flex-wrap:wrap;gap:16px}
@@ -435,14 +454,48 @@ footer small{color:var(--pl-text-4)}
 <section class="block" id="contato" style="padding-top:20px">
   <div class="wrap">
     <div class="cta">
-      <h2>Pronto para colocar a operação sob controle?</h2>
-      <p>Agende uma demonstração do PainelLog. Mostramos como ele se encaixa na sua transportadora e no sistema que você já usa.</p>
-      <div class="cta-row">
-        <!-- TODO: trocar NUMERO pelo WhatsApp real (formato 55DDDNUMERO) -->
-        <a href="https://wa.me/55SEUNUMERO?text=Quero%20uma%20demonstra%C3%A7%C3%A3o%20do%20PainelLog" class="btn btn--primary">Falar no WhatsApp <span class="todo">definir nº</span></a>
-        <!-- TODO: trocar pelo e-mail comercial real -->
-        <a href="mailto:contato@painellog.com.br?subject=Demonstra%C3%A7%C3%A3o%20PainelLog" class="btn btn--outline">Enviar e-mail <span class="todo">definir e-mail</span></a>
-      </div>
+      <h2>Agende uma demonstração</h2>
+      <p>Deixe seus dados e a gente mostra como o PainelLog se encaixa na sua transportadora e no sistema que você já usa. Sem compromisso.</p>
+
+      <form class="lead-form" id="leadForm" action="https://api.web3forms.com/submit" method="POST">
+        <input type="hidden" name="access_key" value="daa577fb-2550-4564-9cd9-cdb2c59abdf8">
+        <input type="hidden" name="subject" value="Novo lead do site PainelLog">
+        <input type="hidden" name="from_name" value="Site PainelLog">
+        <!-- honeypot anti-spam -->
+        <input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off">
+
+        <div class="frow">
+          <div class="field" style="margin-top:0">
+            <label for="f-nome">Seu nome <span class="req">*</span></label>
+            <input id="f-nome" type="text" name="nome" required autocomplete="name" placeholder="Como podemos te chamar">
+          </div>
+          <div class="field" style="margin-top:0">
+            <label for="f-empresa">Transportadora <span class="req">*</span></label>
+            <input id="f-empresa" type="text" name="transportadora" required autocomplete="organization" placeholder="Nome da sua empresa">
+          </div>
+        </div>
+
+        <div class="frow">
+          <div class="field">
+            <label for="f-whats">WhatsApp <span class="req">*</span></label>
+            <input id="f-whats" type="tel" name="whatsapp" required autocomplete="tel" inputmode="tel" placeholder="(11) 99999-9999">
+          </div>
+          <div class="field">
+            <label for="f-email">E-mail <span class="req">*</span></label>
+            <input id="f-email" type="email" name="email" required autocomplete="email" placeholder="voce@suaempresa.com.br">
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="f-msg">Conte rapidamente sobre a sua operação <span style="font-weight:500;color:var(--pl-text-4)">(opcional)</span></label>
+          <textarea id="f-msg" name="mensagem" placeholder="Tamanho da frota, sistema que usa hoje, o que mais incomoda na operação..."></textarea>
+        </div>
+
+        <button type="submit" class="btn btn--primary" id="leadSubmit">Quero uma demonstração →</button>
+        <div class="form-msg" id="formMsg" role="status" aria-live="polite"></div>
+        <p class="form-note">Seus dados são usados só para este contato. Resposta em até 1 dia útil.</p>
+      </form>
+
       <div class="signature">PainelLog, um sistema de entregas. Entregue para você<span class="dot">!</span></div>
     </div>
   </div>
@@ -460,6 +513,46 @@ footer small{color:var(--pl-text-4)}
 document.querySelector('.menu-btn')?.addEventListener('click',function(){
   document.getElementById('funcionalidades')?.scrollIntoView({behavior:'smooth'});
 });
+
+// Envio do formulário de leads via Web3Forms (sem sair da página)
+(function(){
+  var form = document.getElementById('leadForm');
+  if(!form) return;
+  var btn = document.getElementById('leadSubmit');
+  var msg = document.getElementById('formMsg');
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    msg.className = 'form-msg';
+    btn.disabled = true;
+    var original = btn.textContent;
+    btn.textContent = 'Enviando...';
+    var data = Object.fromEntries(new FormData(form).entries());
+    fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify(data)
+    })
+    .then(function(r){ return r.json(); })
+    .then(function(res){
+      if(res.success){
+        msg.textContent = 'Recebemos seus dados! Em breve a gente entra em contato.';
+        msg.className = 'form-msg ok';
+        form.reset();
+      } else {
+        msg.textContent = 'Não consegui enviar agora. Tente de novo em instantes.';
+        msg.className = 'form-msg err';
+      }
+    })
+    .catch(function(){
+      msg.textContent = 'Sem conexão no momento. Tente de novo em instantes.';
+      msg.className = 'form-msg err';
+    })
+    .finally(function(){
+      btn.disabled = false;
+      btn.textContent = original;
+    });
+  });
+})();
 </script>
 </body>
 </html>
